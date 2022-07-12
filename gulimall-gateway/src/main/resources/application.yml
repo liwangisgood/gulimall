@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: mm_route
+          uri: https://image.baidu.com/search/detail?ct=503316480&z=0&ipn=false&word=%E7%BE%8E%E5%A5%B3&hs=0&pn=0&spn=0&di=7108135681917976577&pi=0&rn=1&tn=baiduimagedetail&is=0%2C0&ie=utf-8&oe=utf-8&cl=2&lm=-1&cs=1548547907%2C1874505701&os=1741236599%2C3745385395&simid=1548547907%2C1874505701&adpicid=0&lpn=0&ln=30&fr=ala&fm=&sme=&cg=girl&bdtype=0&oriquery=%E7%BE%8E%E5%A5%B3&objurl=https%3A%2F%2Fgimg2.baidu.com%2Fimage_search%2Fsrc%3Dhttp%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fblog%2F202104%2F24%2F20210424092725_d1de2.thumb.1000_0.jpeg%26refer%3Dhttp%3A%2F%2Fc-ssl.duitang.com%26app%3D2002%26size%3Df9999%2C10000%26q%3Da80%26n%3D0%26g%3D0n%26fmt%3Dauto%3Fsec%3D1660480696%26t%3D109298241cd2b71b4e8e1b3f9cb3acc4&fromurl=ippr_z2C%24qAzdH3FAzdH3Fooo_z%26e3B17tpwg2_z%26e3Bv54AzdH3Fks52AzdH3F%3Ft1%3D8ncam9adac&gsm=1&islist=&querylist=&dyTabStr=MCwzLDIsMSw1LDQsOCw3LDYsOQ%3D%3D
+          predicates:
+            - Query=url,mm
+
+        - id: wyf_route
+          uri: https://baike.baidu.com/
+          predicates:
+            - Query=url,item/%E5%90%B4%E4%BA%A6%E5%87%A1/8325774?fr=aladdin
+
+        - id: admin_route
+          uri: lb://renren-fast  #请求地址路由给该服务名 负载均衡
+          pre

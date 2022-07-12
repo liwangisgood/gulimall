@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.125.131:3306/gulimall_pms
+    driver-class-name: com.mysql.cj.jdbc.Driver   #com.mysql.jdbc.Driver 该不带cj的驱动类已过时
+  application:
+    name: gulimall-product
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.125.131:8848 #不写的话 默认为本地localhost:8848注册中心
+
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml #扫描Dao接口的所有*.xml文件
+  global-config:
+    db-config:
+      id-type: auto  #设置主键自增
+server:
+  port: 10001
+
+

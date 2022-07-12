@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: gulimall-coupon
+  datasource:
+    username: root
+    password: 123456 #data-password:写成如此 程序报错
+    url: jdbc:mysql://192.168.125.131:3306/gulimall_sms
+    driver-class-name: com.mysql.cj.jdbc.Driver  #少cj的驱动类型 过时
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.125.131:8848
+
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto #向表插入数据主键自增
+  mapper-locations: classpath:/mapper/**/*.xml #扫描Dao接口对应*.xml文件
+
+server:
+  port: 7001  #7000 Identify and stop the process that's listening on port 7000 or configure this application to listen on another port.
+              #6000 此网址使用了一个通常用于网络浏览以外目的的端口
+
+

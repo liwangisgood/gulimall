@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: gulimall-member
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.125.131/gulimall_ums
+    driver-class-name: com.mysql.cj.jdbc.Driver  #缺少cj的驱动名 显示已过时
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.125.131:8848 #注意注册中心地址稍有点长
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml #扫描Dao接口对应*.xml文件
+  global-config:
+    db-config:
+      id-type: auto #主键自增
+
+server:
+  port: 8000
