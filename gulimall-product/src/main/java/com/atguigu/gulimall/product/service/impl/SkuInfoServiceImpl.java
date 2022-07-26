@@ -10,12 +10,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.Query;
-
 import com.atguigu.gulimall.product.dao.SkuInfoDao;
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
 import com.atguigu.gulimall.product.service.SkuInfoService;
 import org.springframework.util.StringUtils;
-
 
 @Service("skuInfoService")
 public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> implements SkuInfoService {
@@ -94,15 +92,8 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
     @Override
     public List<SkuInfoEntity> getSkusBySpuId(Long spuId) {
-        List<SkuInfoEntity> list = this.list(null);
-
-        return null;
-    }
-
-    @Override
-    public void up(Long spuId) {
-
-
+        List<SkuInfoEntity> list = this.list(new QueryWrapper<SkuInfoEntity>().eq("spu_id",spuId));
+        return list;
     }
 
 }

@@ -18,8 +18,6 @@ import java.util.Map;
  */
 public interface SpuInfoService extends IService<SpuInfoEntity> {
 
-    void up(Long spuId);
-
     PageUtils queryPage(Map<String, Object> params);
 
     void saveSpuInfo(SpuSaveVo vo);
@@ -28,6 +26,12 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
 
 
     PageUtils queryPageByCondition(Map<String, Object> params);
+
+    /**
+     * 商品上架
+     * @param spuId
+     */
+    void up(Long spuId);
 
 
 }

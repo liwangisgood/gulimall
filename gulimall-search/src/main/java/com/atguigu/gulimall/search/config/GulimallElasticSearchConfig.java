@@ -16,8 +16,7 @@ public class GulimallElasticSearchConfig {
     public RestHighLevelClient client() {
         HttpHost http = new HttpHost("192.168.125.131", 9200, "http");
         RestClientBuilder builder = RestClient.builder(http);
-        RestHighLevelClient restHighLevelClient = new RestHighLevelClient(builder);
-        return restHighLevelClient;
+        return new RestHighLevelClient(builder);
     }
 
 

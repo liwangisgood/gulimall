@@ -28,14 +28,13 @@ public class SkuInfoController {
     @Resource
     private SkuInfoService skuInfoService;
 
-
+    //写错位置了
 // /product/spuinfo/{spuId}/up
-    @PostMapping("/{spuId}/up")
+/*    @PostMapping("/{spuId}/up")
     public R spuUp(@PathVariable("spuId") Long spuId){
         skuInfoService.up(spuId);
         return R.ok();
-    }
-
+    }*/
 
 
     /**
@@ -48,7 +47,6 @@ public class SkuInfoController {
 
         return R.ok().put("page", page);
     }
-
 
     /**
      * 信息

@@ -20,7 +20,7 @@
     <!--返回的是List<Long>集合 返回值类型只需要 其元素类型
     参数为集合List<Long>,在sql文件中需要遍历集合参数-->
     <select id="selectSearchAttrs" resultType="java.lang.Long">
-        select * from 'pms_attr' where attr_id in
+        select * from pms_attr where attr_id in
         <foreach collection="attrIds" open="(" close=")" separator="," item="id">
             #{id}
         </foreach>

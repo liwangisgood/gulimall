@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.product.service.impl;
 
 import com.atguigu.common.constant.ProductConstant;
+import com.atguigu.common.to.SkuHasStockVo;
 import com.atguigu.common.to.SkuReductionTo;
 import com.atguigu.common.to.SpuBoundTo;
 import com.atguigu.common.to.es.SkuEsModel;
@@ -14,6 +15,7 @@ import com.atguigu.gulimall.product.vo.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.alibaba.fastjson.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -78,9 +80,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         //TODO 4.查询当前sku的所有可以被用来检索的规格属性,
         List<ProductAttrValueEntity> baseAttrs = attrValueService.baseAttrlistforspu(spuId);
-        List<Long> attrIds = baseAttrs.stream().map(attr -> {
-            return attr.getAttrId();
-        }).collect(Collectors.toList());
+        List<Long> attrIds = baseAttrs.stream().map(ProductAttrValueEntity::getAttrId).collect(Collectors.toList());
         List<Long> searchAttrIds = attrService.selectSearchAttrs(attrIds);
         HashSet<Long> idSet = new HashSet<>(searchAttrIds);
 
@@ -94,7 +94,18 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         }).collect(Collectors.toList());
 
         //TODO 1,发送远程调用,库存系统查询是否有库存
-        R r = wareFeignService.getSkusHasStock(skuIdList);
+        Map<Long, Boolean> stockMap = null;
+        try {
+            R r = wareFeignService.getSkusHasStock(skuIdList);
+            //protected TypeReference() {}受保护的类使用 需要 new TypeReference(){}; 跨包类似于继承再拿来使用
+
+            TypeReference<List<SkuHasStockVo>> typeReference = new TypeReference<List<SkuHasStockVo>>() {
+            };
+            stockMap = r.getData(typeReference).stream().collect(Collectors.toMap(SkuHasStockVo::getSkuId, SkuHasStockVo::getHasStock));
+
+        } catch (Exception e) {
+            log.error("库存查询服务异常:原因{}", e);
+        }
 
 
         //2.封装每个sku的信息
@@ -124,13 +135,29 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         //TODO 5.将数据发送给es进行保存,gulimall-search
         R r1 = searchFeignService.productStatusUp(uoProducts);//???远程接口调用失败后 会不会重试
-        if (r1.getCode()==0) {
+        if (r1.getCode() == 0) {
             //远程调用成功
             //TODO 6.修改当前spu的状态
             baseMapper.updateSpuStatus(spuId, ProductConstant.StatusEnum.SPU_UP.getCode());
-        }else {
+        } else {
             //远程上架失败
-            //TODO 7.重复调用?接口幂等性问题,重试机制()
+            //TODO 7.重复调用?接口幂等性问题,重试机制() feign服务调用有重试器,发生异常 可重新远程调用
+            //feign的的调用流程
+            /**
+             * 1.构造请求数据,将对象转为json
+             * 2.发送请求进行执行(执行成功会解码响应数据)
+             * executeAndDecode(template)
+             * 3.执行请求会有重试机制
+             *  while(true){
+             *      try{
+             *          executeAndDecode(template);
+             *      }catch(){
+             *          try{retryer.continueOrPropagate(e);}catch(){
+             *              throw ex;}
+             *              continue;
+             *      }
+             *  }
+             */
         }
     }
 
@@ -258,12 +285,8 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                         log.error("远程保存sku优惠信息失败");
                     }
                 }
-
-
             });
         }
-
-
     }
 
     @Override
@@ -309,9 +332,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 new Query<SpuInfoEntity>().getPage(params),
                 wrapper
         );
-
         return new PageUtils(page);
     }
-
 
 }
