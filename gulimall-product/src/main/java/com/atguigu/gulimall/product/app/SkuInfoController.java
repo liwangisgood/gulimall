@@ -1,10 +1,8 @@
-package com.atguigu.gulimall.product.controller;
+package com.atguigu.gulimall.product.app;
 
 import java.util.Arrays;
 import java.util.Map;
 
-import com.atguigu.gulimall.product.service.SpuInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;

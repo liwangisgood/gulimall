@@ -1,16 +1,35 @@
 spring:
+  #mysql
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://192.168.125.131:3306/gulimall_pms
-    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://192.168.125.131:3306/gulimall_pms
+    url: jdbc:mysql://127.0.0.1:3306/gulimall_pms?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #nacos
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.125.131:8848
+        server-addr: 127.0.0.1:8848
+#    inetutils:
+##      preferred-networks: 192.168
+#      ignored-interfaces: 'Mware Virtual Ethernet Adapter for VMnet1,VMware Virtual Ethernet Adapter for VMnet8'
+
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 
+  #开发阶段对thymeleaf进行配置,关闭缓存 能看到实时效果   性能调优开启缓存
+  thymeleaf:
+    cache: true
+    #默认就是下面的
+    prefix: classpath:/templates/
+    suffix: .html
+
+  redis:
+    #添加redis缓存时 需要设置 host port
+    host: 127.0.0.1
+    port: 6379
+    #password: 123456
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
@@ -19,9 +38,11 @@ mybatis-plus:
       id-type: auto
       logic-delete-value: 1
       logic-not-delete-value: 0
+
 server:
   port: 10001
 logging:
   level:
-    com.atguigu.gulimall: debug
+    #性能调优 日志级别调优 从debug到error
+    com.atguigu.gulimall: error
 

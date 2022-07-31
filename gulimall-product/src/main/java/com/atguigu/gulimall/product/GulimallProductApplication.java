@@ -3,6 +3,7 @@ package com.atguigu.gulimall.product;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
@@ -51,7 +52,60 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * 4、统一的异常处理
  * @ControllerAdvice 1）、编写异常处理类，使用@ControllerAdvice。
  * 2）、使用@ExceptionHandler标注方法可以处理的异常。
+ *
+ *
+ * 5.模板引擎   pom
+ *  1) thymeleaf-starter 关闭缓存  yml
+ *  2)静态资源都放在static文件夹下,就可以按照路径直接访问  resources/static
+ *  3)页面放在template下.直接访问SpringBoot,访问项目时,默认会找index   template
+ *  4)页面修改不重启服务器实时更新
+ *      1)引入dev-tools
+ *      2)修改完页面 controller shift f9重新自动编译一下页面,代码配置 推荐重启
+ *
+ *  6.整合redis
+ *  1) 引入data-redis-starter
+ *  2) 简单配置redis的host等信息
+ *  3) 使用springboot自动配置好的StringRedisTemplate来操作redis
+ *      redis->Map:存放数据key,数据值value
+ *
+ *  7.整合redisson作为分布式锁 分布式对象框架
+ *   1).引入依赖
+ *         <dependency>
+ *             <groupId>org.redisson</groupId>
+ *             <artifactId>redisson</artifactId>
+ *             <version>3.12.0</version>
+ *         </dependency>
+ *   2).配置redisson
+ *      MyRedissonConfig给容器中配置一个RedissonClient实例即可
+ *   3).使用
+ *       参照文档做
+ *
+ *  8.整合SpringCache简化缓存开发
+ *      1).引入依赖
+ *          spring-boot-starter-cache spring-boot-starter-data-redis
+ *      2).写配置
+ *          1.自动配置了哪些
+ *              CacheAutoConfiguration会导入RedisCacheConfiguration
+ *              自动配好了缓存管理器RedisCacheManager
+ *          2.配置使用redis作为缓存
+ *              spring.cache.type=redis
+ *      3).测试使用缓存
+ *          https://docs.spring.io/spring-framework/docs/5.1.12.RELEASE/spring-framework-reference/integration.html#cache
+            @Cacheable: Triggers cache population. 触发缓存将数据保存到缓存的操作
+            @CacheEvict: Triggers cache eviction. 触发将数据从缓存删除的操作
+            @CachePut: Updates the cache without interfering with the method execution. 不影响方法执行更新缓存
+            @Caching: Regroups multiple cache operations to be applied on a method. 组合以上多个操作
+            @CacheConfig: Shares some common cache-related settings at class-level. 在类级别上共享缓存的相同配置
+            1).开启缓存功能 @EnableCaching
+            2)@Cacheable
+
+ *
+ *
  */
+
+
+//-Xmx1024m -Xms1024m -Xmn512m  压力测试
+@EnableCaching
 @EnableFeignClients(basePackages = "com.atguigu.gulimall.product.feign")
 @EnableDiscoveryClient
 @MapperScan("com.atguigu.gulimall.product.dao")
